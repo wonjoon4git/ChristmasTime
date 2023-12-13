@@ -6,16 +6,26 @@ let lastMin = -1;
 let lastHour = -1;
 
 function setup() {
-  createCanvas(400, 400);
+  createCanvas(400, 500);
+  lastMinute = minute(); // Initialize with the current minute
 }
 
+
 function draw() {
+  
   // Festive background color
   background('#B22222'); // A shade of red
 
   let h = hour();
   let m = minute();
   let s = second();
+  
+  // Check if the minute has changed
+  let currentMinute = minute();
+  if (currentMinute !== lastMinute) {
+    console.log(currentMinute); // Print the new minute
+    lastMinute = currentMinute; // Update the lastMinute to the current minute
+  }
 
   // Reset logic for each bin
   if (s === 0 && lastSec !== 0) {
@@ -41,13 +51,13 @@ function draw() {
 
   // Add new particles at the top of each bin
   if (secParticles.length < s) {
-    secParticles.push(new Particle(2, 0));
+    secParticles.push(new Particle(2.5, 0));
   }
   if (minParticles.length < m) {
     minParticles.push(new Particle(4, binHeight));
   }
   if (hourParticles.length < h) {
-    hourParticles.push(new Particle(6, 2 * binHeight));
+    hourParticles.push(new Particle(6.5, 2 * binHeight));
   }
 
   // Update and display particles for each bin
@@ -55,6 +65,13 @@ function draw() {
   updateAndDisplayParticles(minParticles, 2 * binHeight);
   updateAndDisplayParticles(hourParticles, height);
 
+
+  // Display particle count for each bin
+  displayParticleCount(s, height / 3);
+  displayParticleCount(m, (height / 3) * 2);
+  displayParticleCount(h, height);
+
+  
   // Display festive message
   textSize(22);
   fill('#FFFFFF'); // White text
@@ -74,12 +91,19 @@ function updateAndDisplayParticles(particles, yMax) {
   }
 }
 
+function displayParticleCount(time, yMax) {
+  fill(255); // White text color
+  textSize(13);
+  textAlign(RIGHT, BOTTOM);
+  text(time, width - 7, yMax - 5); // Adjust position as needed
+}
+
 class Particle {
   constructor(size, yStart) {
     this.size = size;
     this.x = random(width);
     this.y = yStart;
-    this.speed = random(1, 3);
+    this.speed = random(0.5, 1.5);
   }
 
   update() {
